@@ -62,7 +62,7 @@ def is_bad(row):
     return bad
 
 def process(f, base_name, split_size=250, out_dir=None):
-    with open(f, "rb") as csvfile:
+    with open(f, "rU") as csvfile:
         lines = csv.reader(csvfile, delimiter=";")
         fields = parse_fields(lines.next())
         items = []
