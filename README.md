@@ -16,9 +16,11 @@ Fields supported (needed in header):
 - downloadUrl
 - userId
 - tags (comma seperated)
-- categories
+- categories (comma seperated)
 - startDate
 - endDate
+
+Note: Bulk upload will create categories and tags if they do not exist
 
 ## Usage
 
