@@ -31,16 +31,7 @@ python kaltura_bulk.py -h
 
 ## Bad rows
 
-If a row is not utf-8 or ascii the row is marked as a bad row, and added to `bad_rows.txt`. 
+If a row is not utf-8 or mac-roman the row is marked as a bad row, and added to `bad_rows.txt`. 
 
-An example of bad data is exporting data from xsl to csv on OSX. Excel on OSX will use `mac-roman` encoding which means special characters such as `øæåñ` will blow up during processing.
-
-```
-iconv -f MACROMAN -t UTF-8 bad_rows.txt >  bad_rows_UTF8.txt
-```
-
-
-## TODO
-
-- Improve character decoding to avoid bad rows.
+This way you can try and correct the bad rows yourself.
 
