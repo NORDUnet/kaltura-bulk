@@ -10,27 +10,27 @@ def create_item(name, description, downloadUrl, userId, tags, categories, startD
     item = ET.Element("item")
     ET.SubElement(item, "action").text="add"
     ET.SubElement(item, "type").text="1"
-    ET.SubElement(item, "userId").text=unicode(userId, "utf-8")
-    ET.SubElement(item, "name").text=unicode(name, "utf-8")
+    ET.SubElement(item, "userId").text=userId
+    ET.SubElement(item, "name").text=name
     if description:
-      ET.SubElement(item, "description").text=unicode(description, "utf-8")
+      ET.SubElement(item, "description").text=description
     if tags:
         tagsElm = ET.SubElement(item, "tags")
         for t in tags:
-            ET.SubElement(tagsElm, "tag").text=unicode(t,"utf-8")
+            ET.SubElement(tagsElm, "tag").text=t
     if categories:
         categoriesElm = ET.SubElement(item, "categories")
         for c in categories:
-            ET.SubElement(categoriesElm, "category").text=unicode(c,"utf-8")
+            ET.SubElement(categoriesElm, "category").text=c
     if startDate:
-        ET.SubElement(item, "startDate").text=unicode(startDate,"utf-8")
+        ET.SubElement(item, "startDate").text=startDate
     if endDate:
-        ET.SubElement(item, "endDate").text=unicode(endDate, "utf-8")
+        ET.SubElement(item, "endDate").text=endDate
     media = ET.SubElement(item, "media")
-    ET.SubElement(media, "mediaType").text=unicode(mediaType,"utf-8")
+    ET.SubElement(media, "mediaType").text=mediaType
     dl = ET.SubElement(item, "contentAssets")
     dl2 = ET.SubElement(dl, "content")
-    ET.SubElement(dl2, "urlContentResource", url=unicode(downloadUrl, "utf-8"))
+    ET.SubElement(dl2, "urlContentResource", url=downloadUrl)
     return item
 
 def parse_fields(headers):
@@ -67,13 +67,16 @@ def bad_row(row, out_dir=None):
     with open(path, "a") as bad:
         bad.write(";".join(row)+"\n")
 
-def is_bad(row):
-    bad = False
+def unicode_row(row):
+    out = None
     try:
-        ";".join(row).decode("utf-8")
+        out = [unicode(col, "utf-8") for col in row]
     except UnicodeDecodeError:
-        bad = True
-    return bad
+        try:
+            out = [unicode(col, "mac-roman") for col in row]
+        except UnicodeDecodeError:
+            pass
+    return out
 
 def process(f, base_name, split_size=250, out_dir=None, pretty=False):
     with open(f, "rU") as csvfile:
@@ -81,9 +84,10 @@ def process(f, base_name, split_size=250, out_dir=None, pretty=False):
         fields = parse_fields(lines.next())
         items = []
         file_nbr=1
-        for row in lines:
-            if is_bad(row):
-                bad_row(row, out_dir=out_dir)
+        for row_raw in lines:
+            row = unicode_row(row_raw)
+            if not row:
+                bad_row(row_raw, out_dir=out_dir)
                 continue
             name = row[fields["name"]]
             description = row[fields["description"]]
