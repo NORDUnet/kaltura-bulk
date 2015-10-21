@@ -48,7 +48,6 @@ def write_bulk_file(items, name="bulk_upload", nbr=1, out_dir=None, pretty=False
         #ET.ElementTree(root).write("{0}_{1:03d}.xml".format(path, nbr), encoding="UTF-8", xml_declaration=True)
         if pretty:
             out = pretty_print(out)
-            out = out.encode("utf-8")
         with open("{0}_{1:03d}.xml".format(path, nbr), "wb") as f:
             f.write(out)
     except UnicodeDecodeError as e: 
@@ -59,7 +58,7 @@ def write_bulk_file(items, name="bulk_upload", nbr=1, out_dir=None, pretty=False
         print "Error writing bulk file: {}".format(e)
 
 def pretty_print(xml):
-    return minidom.parseString(xml).toprettyxml(indent="\t")
+    return minidom.parseString(xml).toprettyxml(indent="\t", encoding="UTF-8")
 
 def bad_row(row, out_dir=None):
     path = "bad_rows.txt"
