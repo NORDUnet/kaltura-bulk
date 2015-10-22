@@ -35,3 +35,6 @@ If a row is not utf-8 or mac-roman the row is marked as a bad row, and added to 
 
 This way you can try and correct the bad rows yourself.
 
+## License
+
+NORDUnet License (3-clause BSD). See LICENSE.txt for more details.
